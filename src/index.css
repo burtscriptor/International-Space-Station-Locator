@@ -1,0 +1,13 @@
+body {
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 0;
+  background-color: black;
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 36px;
+  font-style: normal;
+}
+
+

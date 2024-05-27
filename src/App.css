@@ -1,0 +1,54 @@
+.App {
+  text-align: center;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.map-container{
+  height:100vh;
+  width: 100vw;
+}
+
+.icon {
+  display:inline;
+  width: 40px;
+  height: auto;
+}
+
+.in_space {
+  align-self: center;
+  color:white;
+}
+
+.hide {
+  display: none;
+}
+
+.info {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center; 
+ 
+  border-radius: 10px;
+  padding: 20px;
+  background-color: black;
+  width:60vw;
+  margin: 10px;
+ color: white;
+  
+}
+
+.icons {
+  display: inline;
+  width: 15px;
+}
