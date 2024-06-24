@@ -21,8 +21,9 @@ function App() {
   useEffect(() => {
     const getIssLocation = async () => {
       try {
-        const res = await axios.get('http://api.open-notify.org/iss-now.json');
-        const { longitude, latitude } = res.data.iss_position;
+        const res = await axios.get('/api');
+        console.log('this is res', res)
+        const { longitude, latitude } = res.data.NASA;
         setIssLocation({ lat: parseFloat(latitude), lng: parseFloat(longitude) });
       } catch (error) {
         setError(error.message);
@@ -42,8 +43,9 @@ function App() {
   useEffect(() => {
     const getAstronauts = async () => {
       try {
-        const res = await axios.get('http://api.open-notify.org/astros.json');
-        setInSpace(res.data);
+        const res = await axios.get('api/astros');
+        console.log('astros', res.data.astros.people)
+        setInSpace(res.data.astros.people);
         setIsLoading(false);
       } catch (error) {
         setError(error.message);
@@ -103,7 +105,7 @@ function App() {
                   {open && inSpace && (
                     <InfoWindow position={issLocation} onCloseClick={() => setOpen(false)}>
                       We're on the ISS!
-                      {inSpace.people.map((person, index) => (
+                      {inSpace.map((person, index) => (
                         <p key={index}>{person.name}</p>
                       ))}
                     </InfoWindow>
