@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 import img from './assets/components/astronaut.png';
-import sunset from './assets/components/sunset.png';
-import earth from './assets/components/trees.png';
-import iss from './assets/components/iss.png';
-import sunrise from './assets/components/sunrise.png';
 import { Box, Flex } from '@chakra-ui/react';
 import { APIProvider, Map, AdvancedMarker, useMarkerRef, InfoWindow } from '@vis.gl/react-google-maps';
 
@@ -19,6 +15,43 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [show, setShow] = useState(true);
   const [map, setMap] = useState(null); // Define setMap using useState
+  const [error, setError] = useState(null);
+  const [isLoadingMap, setIsLoadingMap] = useState(true);
+
+  useEffect(() => {
+    const getIssLocation = async () => {
+      try {
+        const res = await axios.get('http://api.open-notify.org/iss-now.json');
+        const { longitude, latitude } = res.data.iss_position;
+        setIssLocation({ lat: parseFloat(latitude), lng: parseFloat(longitude) });
+      } catch (error) {
+        setError(error.message);
+        console.log('this is error from OpenISS', error)
+      } finally {
+        setIsLoadingMap(false); // Set loading state to false once location is fetched
+      }
+    };
+
+    const intervalId = setInterval(() => {
+      getIssLocation();
+    }, 7000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    const getAstronauts = async () => {
+      try {
+        const res = await axios.get('http://api.open-notify.org/astros.json');
+        setInSpace(res.data);
+        setIsLoading(false);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    getAstronauts();
+  }, []);
 
   useEffect(() => {
     if (!marker) {
@@ -27,34 +60,12 @@ function App() {
     console.log('do something with marker?');
   }, [marker]);
 
-  useEffect(() => {
-    const getIssLocation = async () => {
-      const res = await axios.get('http://api.open-notify.org/iss-now.json');
-      const { longitude, latitude } = res.data.iss_position;
-      setIssLocation({ lat: parseFloat(latitude), lng: parseFloat(longitude) });
-    };
-
-    const intervalId = setInterval(() => {
-      getIssLocation();
-    }, 5000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    const getAstronauts = async () => {
-      const res = await axios.get('http://api.open-notify.org/astros.json');
-      setInSpace(res.data);
-      setIsLoading(false);
-    };
-
-    getAstronauts();
-  }, []);
-
   return (
     <div className='main'>
       {isLoading ? (
         <p>Loading..</p>
+      ) : error ? (
+        <p>Error: {error}</p>
       ) : (
         <Flex
           position="relative"
@@ -68,36 +79,38 @@ function App() {
             <Box position="relative" display="flex" flexDirection="row" alignItems="center" justifyContent="center" >
               <div className="info">
                 <h1>International Space Station Locator</h1>
-                  {/* The <img className="icons" src={iss} alt="ISS" /> orbits the <img className="icons" src={earth} alt="Earth" /> every 90 minutes, which gives the <img className="icons" src={img} alt="Astronaut" /> 16 <img className="icons" src={sunrise} alt="Sunrise" /> and <img src={sunset} className="icons" alt="Sunset" /> every day. */}
-                
               </div>
             </Box>
           ) : (
             <p></p>
           )}
           <Box position="relative" left={0} top={0} h="60%" w="60%" >
-            <APIProvider apiKey={apiKey}>
-              <Map
-                mapId="269bcd1f5ba584f8"
-                mapTypeId="satellite"
-                defaultCenter={issLocation}
-                defaultZoom={5}
-                mapContainerStyle={{ width: '60%', height: '60%' }}
-                onLoad={map => setMap(map)} // Use setMap here
-              >
-                <AdvancedMarker position={issLocation} onClick={() => { setOpen(true); setShow(false); }}>
-                  <img className="icon" src={img} alt="Astronaut" />
-                </AdvancedMarker>
-                {open && inSpace && (
-                  <InfoWindow position={issLocation} onCloseClick={() => setOpen(false)}>
-                    We're on the ISS!
-                    {inSpace.people.map((person, index) => (
-                      <p key={index}>{person.name}</p>
-                    ))}
-                  </InfoWindow>
-                )}
-              </Map>
-            </APIProvider>
+            {isLoadingMap ? (
+              <p>Loading map...</p>
+            ) : (
+              <APIProvider apiKey={apiKey}>
+                <Map
+                  mapId="269bcd1f5ba584f8"
+                  mapTypeId="satellite"
+                  defaultCenter={issLocation}
+                  defaultZoom={5}
+                  mapContainerStyle={{ width: '60%', height: '60%' }}
+                  onLoad={map => setMap(map)}
+                >
+                  <AdvancedMarker position={issLocation} onClick={() => { setOpen(true); setShow(false); }}>
+                    <img className="icon" src={img} alt="Astronaut" />
+                  </AdvancedMarker>
+                  {open && inSpace && (
+                    <InfoWindow position={issLocation} onCloseClick={() => setOpen(false)}>
+                      We're on the ISS!
+                      {inSpace.people.map((person, index) => (
+                        <p key={index}>{person.name}</p>
+                      ))}
+                    </InfoWindow>
+                  )}
+                </Map>
+              </APIProvider>
+            )}
             <div className={show ? 'in-space' : 'hide'}>
                 <p color="white">Click on the astronaut!</p>
               </div>
