@@ -25,7 +25,7 @@ One of the StackOverFlow solutions was to create a server/backend/proxy that ser
 ## Inital purpose 
 The purpose was to familiarize myself with using Google React Maps—passing props such as coordinates, using markers, and setting up default settings for the map on page load. Additionally, I wanted to practice the safe storage and retrieval of API keys via a .env file. API keys are essential for Google services and many web services. I created a project in the Google Cloud Console, navigated to ‘APIs and services,’ enabled Google Maps, navigated to ‘Credentials’ to create an API key, and then set the key up to allow its use from different IP addresses/users. I stored the API key in a .env file within the application and accessed it using process.env.
 
-The Open Notify API (http://open-notify.org/Open-Notify-API/ISS-Location-Now/) allows users to access the ISS geolocation every 5 seconds. So rather than just rendering a static marker on Google Maps, I used setInterval() to time calls to get the ISS location, then continually passed the updated coordinates as props to Google React Maps.
+The Open Notify API http://open-notify.org/Open-Notify-API/ISS-Location-Now/ allows users to access the ISS geolocation every 5 seconds. So rather than just rendering a static marker on Google Maps, I used setInterval() to time calls to get the ISS location, then continually passed the updated coordinates as props to Google React Maps.
 
 ## Problems and Solutions
 I initially followed a tutorial for 
