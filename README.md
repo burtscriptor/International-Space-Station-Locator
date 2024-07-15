@@ -52,5 +52,8 @@ Clicking on the spaceman shows a list of everyone currently in space.
 
 
 ## Improvements, next iteration 
-Google-react-maps is initally slow to load, this could be improved.
-The
+Google-react-maps is initally slow to load, this could be improved?
+Intially wanted to have the users location display but thought people might not like that, so removed it, but I think putting it back in as an option 
+could be a nice touch.
+When you zoom out far enought on google maps a grey border appears? Should be able to set a maxium zoom out to avoid getting to this point.
+The small spaceman image is hard coded into the application and image uploaded into the build rather then referenced in the code to a cloud storage location. That would speed things up.
