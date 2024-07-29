@@ -14,7 +14,7 @@ function App() {
   const [inSpace, setInSpace] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [show, setShow] = useState(true);
-  const [map, setMap] = useState(null); // Define setMap using useState
+  const [map, setMap] = useState(null); 
   const [error, setError] = useState(null);
   const [isLoadingMap, setIsLoadingMap] = useState(true);
 
@@ -29,7 +29,7 @@ function App() {
         setError(error.message);
         console.log('this is error from OpenISS', error)
       } finally {
-        setIsLoadingMap(false); // Set loading state to false once location is fetched
+        setIsLoadingMap(false); 
       }
     };
 
