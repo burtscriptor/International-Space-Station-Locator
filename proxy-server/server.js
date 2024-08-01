@@ -3,7 +3,7 @@ const axios = require('axios')
 const app = express()
 
 app.get("/api", async (request, response) =>  {
-    // response.json({ "users": ["userOne", "userTwo", "userThree" ]})
+  
     try {
         const NASA = await axios.get(('http://api.open-notify.org/iss-now.json'))
         console.log(NASA.data.iss_position)
